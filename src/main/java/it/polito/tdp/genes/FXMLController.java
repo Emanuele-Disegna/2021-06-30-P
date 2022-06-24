@@ -1,9 +1,12 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Model;
+import it.polito.tdp.genes.model.Statistiche;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,19 +30,28 @@ public class FXMLController {
     private Button btnRicerca;
 
     @FXML
-    private ComboBox<?> boxLocalizzazione;
+    private ComboBox<String> boxLocalizzazione;
 
     @FXML
     private TextArea txtResult;
 
     @FXML
     void doRicerca(ActionEvent event) {
-
+    	for(String s : model.cerca(boxLocalizzazione.getValue())) {
+    		txtResult.appendText(s+"\n");
+    	}
+    	
+    	txtResult.appendText(model.getSommaOttima()+"");
     }
 
     @FXML
     void doStatistiche(ActionEvent event) {
-
+    	model.creaGrafo();
+    	txtResult.clear();
+    	
+    	for(Statistiche s : model.getStatistiche(boxLocalizzazione.getValue())) {
+    		txtResult.appendText(s+"\n");
+    	}
     }
 
     @FXML
@@ -53,5 +65,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		
+		boxLocalizzazione.getItems().addAll(model.getVertici());
 	}
 }
